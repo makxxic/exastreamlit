@@ -1,0 +1,9 @@
+datetime
+typing 
+pandas 
+streamlit 
+openai
+matplotlib
+supabase
+python-dotenv>=0.21.0  
+tiktoken>=0.4.0  
