@@ -254,9 +254,12 @@ def page_history():
     st.dataframe(df[['date','alias','distance','electricity','lpg','total_emission']].sort_values('date',ascending=False))
 
     df['date'] = pd.to_datetime(df['date'])
-    # Monthly totals
-    df_monthly = df.groupby(df['date'].dt.to_period("M")).sum().reset_index()
+
+    # Only sum numeric columns
+    numeric_cols = ['distance','electricity','lpg','transport_emission','electricity_emission','lpg_emission','total_emission']
+    df_monthly = df.groupby(df['date'].dt.to_period("M"))[numeric_cols].sum().reset_index()
     df_monthly['date'] = df_monthly['date'].dt.to_timestamp()
+
     fig, ax = plt.subplots(figsize=(8,4))
     ax.plot(df_monthly['date'], df_monthly['total_emission'], marker="o")
     ax.set_title("Monthly Total CO₂ Emissions")
@@ -280,6 +283,7 @@ def page_history():
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button("📥 Download History CSV", data=csv, file_name="co2_history.csv", mime="text/csv")
 
+  
 # -------------------- GOALS & ALERTS --------------------
 def page_goals_and_alerts():
     st.header("Goals & Alerts")
